@@ -111,10 +111,12 @@ static LoRaMacCryptoNvmData_t* CryptoNvm;
  */
 static KeyAddr_t KeyAddrList[NUM_OF_SEC_CTX] =
     {
+#if 0
         { MULTICAST_0_ADDR, MC_APP_S_KEY_0, MC_NWK_S_KEY_0, MC_KEY_0 },
         { MULTICAST_1_ADDR, MC_APP_S_KEY_1, MC_NWK_S_KEY_1, MC_KEY_1 },
         { MULTICAST_2_ADDR, MC_APP_S_KEY_2, MC_NWK_S_KEY_2, MC_KEY_2 },
         { MULTICAST_3_ADDR, MC_APP_S_KEY_3, MC_NWK_S_KEY_3, MC_KEY_3 },
+#endif
         { UNICAST_DEV_ADDR, APP_S_KEY, S_NWK_S_INT_KEY, NO_KEY }
     };
 
@@ -962,6 +964,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSetKey( KeyIdentifier_t keyID, uint8_t* key )
     {
         return LORAMAC_CRYPTO_ERROR_SECURE_ELEMENT_FUNC;
     }
+#if 0
     if( keyID == APP_KEY )
     {
         // Derive lifetime keys
@@ -974,6 +977,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSetKey( KeyIdentifier_t keyID, uint8_t* key )
             return LORAMAC_CRYPTO_ERROR_SECURE_ELEMENT_FUNC;
         }
     }
+#endif
     return LORAMAC_CRYPTO_SUCCESS;
 }
 
@@ -1190,6 +1194,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
         return LORAMAC_CRYPTO_FAIL_JOIN_NONCE;
     }
 
+#if 0
     // Derive lifetime keys
     retval = LoRaMacCryptoDeriveMcRootKey( versionMinor, APP_KEY );
     if( retval != LORAMAC_CRYPTO_SUCCESS )
@@ -1202,6 +1207,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
     {
         return retval;
     }
+#endif
 
 #if( USE_LRWAN_1_1_X_CRYPTO == 1 )
     if( versionMinor == 1 )
@@ -1464,6 +1470,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoUnsecureMessage( AddressIdentifier_t addrID, 
     return LORAMAC_CRYPTO_SUCCESS;
 }
 
+#if 0
 LoRaMacCryptoStatus_t LoRaMacCryptoDeriveMcRootKey( uint8_t versionMinor, KeyIdentifier_t keyID )
 {
     // Prevent other keys than AppKey
@@ -1549,3 +1556,4 @@ LoRaMacCryptoStatus_t LoRaMacCryptoDeriveMcSessionKeyPair( AddressIdentifier_t a
 
     return LORAMAC_CRYPTO_SUCCESS;
 }
+#endif

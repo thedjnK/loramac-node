@@ -711,6 +711,7 @@ typedef enum eKeyIdentifier
      * Application session key
      */
     APP_S_KEY,
+#if 0
     /*!
      * Multicast root key
      */
@@ -771,6 +772,7 @@ typedef enum eKeyIdentifier
      * Zero key for slot randomization in class B
      */
     SLOT_RAND_ZERO_KEY,
+#endif
     /*!
      * No Key
      */

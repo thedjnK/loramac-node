@@ -4485,6 +4485,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
             }
             break;
         }
+#if 0
         case MIB_MC_KE_KEY:
         {
             if( mibSet->Param.McKEKey != NULL )
@@ -4680,6 +4681,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
             }
             break;
         }
+#endif
         case MIB_PUBLIC_NETWORK:
         {
             Nvm.MacGroup2.PublicNetwork = mibSet->Param.EnablePublicNetwork;
@@ -5077,6 +5079,7 @@ LoRaMacStatus_t LoRaMacChannelRemove( uint8_t id )
     return LORAMAC_STATUS_OK;
 }
 
+#if 0
 LoRaMacStatus_t LoRaMacMcChannelSetup( McChannelParams_t *channel )
 {
     if( ( MacCtx.MacState & LORAMAC_TX_RUNNING ) == LORAMAC_TX_RUNNING )
@@ -5229,6 +5232,7 @@ LoRaMacStatus_t LoRaMacMcChannelSetupRxParams( AddressIdentifier_t groupID, McRx
     }
     return LORAMAC_STATUS_OK;
 }
+#endif
 
 /*!
  * \brief Function executed on AbpJoinPendingTimer timer event
