@@ -2928,6 +2928,13 @@ LoRaMacStatus_t LoRaMacDeInitialization( void );
  */
 void LoRaMacReset( void );
 
+/*!
+ * \brief   Returns a pointer to the internal contexts structure.
+ *
+ * \retval  void Points to a structure containing all contexts
+ */
+LoRaMacNvmData_t* GetNvmData( void );
+
 /*! \} defgroup LORAMAC */
 
 #ifdef __cplusplus

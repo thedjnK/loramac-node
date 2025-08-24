@@ -551,13 +551,6 @@ static void RxWindowSetup( TimerEvent_t* rxTimer, RxConfigParams_t* rxConfig );
 static void OpenContinuousRxCWindow( void );
 
 /*!
- * \brief   Returns a pointer to the internal contexts structure.
- *
- * \retval  void Points to a structure containing all contexts
- */
-static LoRaMacNvmData_t* GetNvmData( void );
-
-/*!
  * \brief   Restoring of internal module contexts
  *
  * \details This function allows to restore module contexts by a given pointer.
