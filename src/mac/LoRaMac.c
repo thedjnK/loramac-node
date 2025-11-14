@@ -48,6 +48,8 @@
 
 #include "LoRaMac.h"
 
+static bool showpkt = false;
+
 /*!
  * Maximum PHY layer payload size
  */
@@ -1628,6 +1630,7 @@ static void LoRaMacHandleRejoinEvents( void )
 {
     if( MacCtx.MacState == LORAMAC_IDLE )
     {
+printk("IS IDLE\n");
         MlmeReq_t mlmeReq;
         if( IsReJoin0Required( ) == true )
         {
@@ -1636,6 +1639,7 @@ static void LoRaMacHandleRejoinEvents( void )
         }
         else if( Nvm.MacGroup2.IsRejoin0RequestQueued == true )
         {
+printk("REJOIN0\n");
             mlmeReq.Type = MLME_REJOIN_0;
             if( LoRaMacMlmeRequest( &mlmeReq ) == LORAMAC_STATUS_OK )
             {
@@ -1644,6 +1648,7 @@ static void LoRaMacHandleRejoinEvents( void )
         }
         else if( Nvm.MacGroup2.IsRejoin1RequestQueued == true )
         {
+printk("REJOIN1\n");
             mlmeReq.Type = MLME_REJOIN_1;
             if( LoRaMacMlmeRequest( &mlmeReq ) == LORAMAC_STATUS_OK )
             {
@@ -1652,6 +1657,7 @@ static void LoRaMacHandleRejoinEvents( void )
         }
         else if( Nvm.MacGroup2.IsRejoin2RequestQueued == true )
         {
+printk("REJOIN2\n");
             mlmeReq.Type = MLME_REJOIN_2;
             if( LoRaMacMlmeRequest( &mlmeReq ) == LORAMAC_STATUS_OK )
             {
@@ -1659,6 +1665,9 @@ static void LoRaMacHandleRejoinEvents( void )
             }
         }
     }
+else {
+printk("IS NOT IDLE :(\n");
+}
 }
 
 static void LoRaMacHandleMcpsRequest( void )
@@ -2769,6 +2778,8 @@ LoRaMacStatus_t SendReJoinReq( JoinReqIdentifier_t joinReqType )
                 return LORAMAC_STATUS_CRYPTO_ERROR;
             }
 
+printk("rjcount1: %d\n", MacCtx.TxMsg.Message.ReJoin1.RJcount1);
+showpkt = true;
             break;
         }
         case REJOIN_REQ_0:
@@ -2795,6 +2806,7 @@ LoRaMacStatus_t SendReJoinReq( JoinReqIdentifier_t joinReqType )
             MacCtx.TxMsg.Message.ReJoin0or2.NetID[0] = Nvm.MacGroup2.NetID & 0xFF;
             MacCtx.TxMsg.Message.ReJoin0or2.NetID[1] = ( Nvm.MacGroup2.NetID >> 8 ) & 0xFF;
             MacCtx.TxMsg.Message.ReJoin0or2.NetID[2] = ( Nvm.MacGroup2.NetID >> 16 ) & 0xFF;
+printk("netid: %02x %02x %02x\n", MacCtx.TxMsg.Message.ReJoin0or2.NetID[2], MacCtx.TxMsg.Message.ReJoin0or2.NetID[1], MacCtx.TxMsg.Message.ReJoin0or2.NetID[0]);
 
             memcpy1( MacCtx.TxMsg.Message.ReJoin0or2.DevEUI, SecureElementGetDevEui( ), LORAMAC_DEV_EUI_FIELD_SIZE );
 
@@ -2803,6 +2815,8 @@ LoRaMacStatus_t SendReJoinReq( JoinReqIdentifier_t joinReqType )
                 return LORAMAC_STATUS_CRYPTO_ERROR;
             }
 
+printk("rjcount0: %d", MacCtx.TxMsg.Message.ReJoin0or2.RJcount0);
+showpkt = true;
             break;
         }
         case JOIN_REQ:
@@ -3021,6 +3035,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
     status = VerifyTxFrame( );
     if( status != LORAMAC_STATUS_OK )
     {
+printk("VERIFY FAIL: %d", status);
         return status;
     }
 
@@ -3045,8 +3060,10 @@ static LoRaMacStatus_t SecureFrame( uint8_t txDr, uint8_t txCh )
             break;
         case LORAMAC_MSG_TYPE_RE_JOIN_1:
             macCryptoStatus = LoRaMacCryptoPrepareReJoinType1( &MacCtx.TxMsg.Message.ReJoin1 );
+printk("REJOIN CRYPTO...");
             if( LORAMAC_CRYPTO_SUCCESS != macCryptoStatus )
             {
+printk("REJOIN CRYPTO FAIL");
                 return LORAMAC_STATUS_CRYPTO_ERROR;
             }
             MacCtx.PktBufferLen = MacCtx.TxMsg.Message.ReJoin1.BufSize;
@@ -3423,6 +3440,7 @@ LoRaMacStatus_t SendFrameOnChannel( uint8_t channel )
     status = SecureFrame( Nvm.MacGroup1.ChannelsDatarate, MacCtx.Channel );
     if( status != LORAMAC_STATUS_OK )
     {
+printk("SECURE FAIL: %d", status);
         return status;
     }
 
@@ -3432,6 +3450,17 @@ LoRaMacStatus_t SendFrameOnChannel( uint8_t channel )
     MacCtx.McpsConfirm.NbTrans = MacCtx.ChannelsNbTransCounter;
     MacCtx.ResponseTimeoutStartTime = 0;
 
+printk("chanel: %d, datarate: %d, txpower: %d\n", txConfig.Channel, txConfig.Datarate, txConfig.TxPower);
+
+if (showpkt == true) {
+showpkt = false;
+uint8_t l = 0;
+printk("send: ");
+while (l < MacCtx.PktBufferLen) {
+printk("%02x", MacCtx.PktBuffer[l++]);
+}
+printk("\n");
+}
     // Send now
     Radio.Send( MacCtx.PktBuffer, MacCtx.PktBufferLen );
 
@@ -4955,7 +4984,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
                 ( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_OTAA ) )
             {
                 Nvm.MacGroup2.Rejoin1CycleInSec = mibSet->Param.Rejoin1CycleInSec;
-                MacCtx.Rejoin0CycleTime = cycleTime;
+                MacCtx.Rejoin1CycleTime = cycleTime;
                 TimerStop( &MacCtx.Rejoin1CycleTimer );
                 TimerSetValue( &MacCtx.Rejoin1CycleTimer, MacCtx.Rejoin1CycleTime );
                 TimerStart( &MacCtx.Rejoin1CycleTimer );
@@ -5616,9 +5645,9 @@ static void OnRejoin0CycleTimerEvent( void* context )
     TimerStop( &MacCtx.Rejoin0CycleTimer );
     ConvertRejoinCycleTime( Nvm.MacGroup2.Rejoin0CycleInSec, &MacCtx.Rejoin0CycleTime );
 
-    OnMacProcessNotify( );
-
     Nvm.MacGroup2.IsRejoin0RequestQueued = true;
+
+    OnMacProcessNotify( );
 
     TimerSetValue( &MacCtx.Rejoin0CycleTimer, MacCtx.Rejoin0CycleTime );
     TimerStart( &MacCtx.Rejoin0CycleTimer );
@@ -5629,9 +5658,9 @@ static void OnRejoin1CycleTimerEvent( void* context )
     TimerStop( &MacCtx.Rejoin1CycleTimer );
     ConvertRejoinCycleTime( Nvm.MacGroup2.Rejoin1CycleInSec, &MacCtx.Rejoin1CycleTime );
 
-    OnMacProcessNotify( );
-
     Nvm.MacGroup2.IsRejoin1RequestQueued = true;
+
+    OnMacProcessNotify( );
 
     TimerSetValue( &MacCtx.Rejoin1CycleTimer, MacCtx.Rejoin1CycleTime );
     TimerStart( &MacCtx.Rejoin1CycleTimer );

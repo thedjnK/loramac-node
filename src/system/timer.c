@@ -115,17 +115,17 @@ void TimerStart( TimerEvent_t *obj )
     obj->IsStarted = true;
     obj->IsNext2Expire = false;
 
+        elapsedTime = RtcGetTimerValue( );
+        obj->Timestamp += elapsedTime;
+
     if( TimerListHead == NULL )
     {
-        RtcSetTimerContext( );
+//        RtcSetTimerContext( );
         // Inserts a timer at time now + obj->Timestamp
         TimerInsertNewHeadTimer( obj );
     }
     else
     {
-        elapsedTime = RtcGetTimerElapsedTime( );
-        obj->Timestamp += elapsedTime;
-
         if( obj->Timestamp < TimerListHead->Timestamp )
         {
             TimerInsertNewHeadTimer( obj );
@@ -185,12 +185,15 @@ void TimerIrqHandler( void )
     TimerEvent_t* cur;
     TimerEvent_t* next;
 
-    uint32_t old =  RtcGetTimerContext( );
-    uint32_t now =  RtcSetTimerContext( );
-    uint32_t deltaContext = now - old; // intentional wrap around
+//    uint32_t old =  RtcGetTimerContext( );
+//    uint32_t now =  RtcSetTimerContext( );
+//    uint32_t deltaContext = now - old; // intentional wrap around
+
+uint32_t ctime = RtcGetTimerValue();
 
     // Update timeStamp based upon new Time Reference
     // because delta context should never exceed 2^32
+#if 0
     if( TimerListHead != NULL )
     {
         for( cur = TimerListHead; cur->Next != NULL; cur = cur->Next )
@@ -206,6 +209,7 @@ void TimerIrqHandler( void )
             }
         }
     }
+#endif
 
     // Execute immediately the alarm callback
     if ( TimerListHead != NULL )
@@ -217,7 +221,7 @@ void TimerIrqHandler( void )
     }
 
     // Remove all the expired object from the list
-    while( ( TimerListHead != NULL ) && ( TimerListHead->Timestamp < RtcGetTimerElapsedTime( ) ) )
+    while( ( TimerListHead != NULL ) && ( TimerListHead->Timestamp < ctime ) )
     {
         cur = TimerListHead;
         TimerListHead = TimerListHead->Next;
@@ -368,9 +372,9 @@ static void TimerSetTimeout( TimerEvent_t *obj )
     obj->IsNext2Expire = true;
 
     // In case deadline too soon
-    if( obj->Timestamp  < ( RtcGetTimerElapsedTime( ) + minTicks ) )
+    if( obj->Timestamp  < ( RtcGetTimerValue( ) + minTicks ) )
     {
-        obj->Timestamp = RtcGetTimerElapsedTime( ) + minTicks;
+        obj->Timestamp = RtcGetTimerValue( ) + minTicks;
     }
     RtcSetAlarm( obj->Timestamp );
 }
