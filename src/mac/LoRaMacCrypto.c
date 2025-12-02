@@ -94,11 +94,13 @@ typedef struct sKeyAddr
     KeyIdentifier_t RootKey;
 }KeyAddr_t;
 
+#if 0
 #if( USE_LRWAN_1_1_X_CRYPTO == 1 )
 /*
  * RJcount0 is a counter incremented with every Type 0 or 2 Rejoin frame transmitted.
  */
 static uint16_t RJcount0;
+#endif
 #endif
 
 /*
@@ -919,6 +921,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoGetFCntDown( FCntIdentifier_t fCntID, uint32_
     return LORAMAC_CRYPTO_SUCCESS;
 }
 
+#if 0
 LoRaMacCryptoStatus_t LoRaMacCryptoGetRJcount( FCntIdentifier_t fCntID, uint16_t* rJcount )
 {
 #if( USE_LRWAN_1_1_X_CRYPTO == 1 )
@@ -942,6 +945,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoGetRJcount( FCntIdentifier_t fCntID, uint16_t
     return LORAMAC_CRYPTO_ERROR;
 #endif
 }
+#endif
 
 LoRaMacCryptoStatus_t LoRaMacCryptoSetMulticastReference( MulticastCtx_t* multicastList )
 {
@@ -1032,6 +1036,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoPrepareJoinRequest( LoRaMacMessageJoinRequest
     return LORAMAC_CRYPTO_SUCCESS;
 }
 
+#if 0
 LoRaMacCryptoStatus_t LoRaMacCryptoPrepareReJoinType1( LoRaMacMessageReJoinType1_t* macMsg )
 {
 #if( USE_LRWAN_1_1_X_CRYPTO == 1 )
@@ -1115,6 +1120,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoPrepareReJoinType0or2( LoRaMacMessageReJoinTy
     return LORAMAC_CRYPTO_ERROR;
 #endif
 }
+#endif
 
 LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReqType, uint8_t* joinEUI, LoRaMacMessageJoinAccept_t* macMsg )
 {
@@ -1137,6 +1143,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
     {
         // Nothing to be done
     }
+#if 0
 #if( USE_LRWAN_1_1_X_CRYPTO == 1 )
     else
     {
@@ -1150,6 +1157,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
             nonce = CryptoNvm->FCntList.RJcount1;
         }
     }
+#endif
 #endif
 
     if( SecureElementProcessJoinAccept( joinReqType, joinEUI, nonce, macMsg->Buffer,
@@ -1279,8 +1287,10 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
     CryptoNvm->LrWanVersion.Fields.Minor = versionMinor;
 
     // Reset frame counters
+#if 0
 #if( USE_LRWAN_1_1_X_CRYPTO == 1 )
     RJcount0 = 0;
+#endif
 #endif
     CryptoNvm->FCntList.FCntUp = 0;
     CryptoNvm->FCntList.FCntDown = FCNT_DOWN_INITIAL_VALUE;
