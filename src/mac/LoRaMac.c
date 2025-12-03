@@ -32,7 +32,9 @@
  */
 #include "utilities.h"
 #include "region/Region.h"
+#if 0
 #include "LoRaMacClassB.h"
+#endif
 #include "LoRaMacCrypto.h"
 #include "secure-element.h"
 #include "LoRaMacTest.h"
@@ -174,7 +176,9 @@ typedef struct sLoRaMacCtx
     */
     RxConfigParams_t RxWindow1Config;
     RxConfigParams_t RxWindow2Config;
+#if 0
     RxConfigParams_t RxWindowCConfig;
+#endif
     /*
     * Acknowledge timeout timer. Used for packet retransmissions.
     */
@@ -554,11 +558,13 @@ static bool IsReJoin0Required( void );
  */
 static void RxWindowSetup( TimerEvent_t* rxTimer, RxConfigParams_t* rxConfig );
 
+#if 0
 /*!
  * \brief Opens up a continuous RX C window. This is used for
  *        class c devices.
  */
 static void OpenContinuousRxCWindow( void );
+#endif
 
 /*!
  * \brief   Restoring of internal module contexts
@@ -638,12 +644,14 @@ static void OnMacProcessNotify( void );
  */
 static void CallNvmDataChangeCallback( uint16_t notifyFlags );
 
+#if 0
 /*!
  * \brief Verifies if a request is pending currently
  *
  * \retval 1: Request pending, 0: request not pending
  */
 static uint8_t IsRequestPending( void );
+#endif
 
 /*!
  * \brief Enabled the possibility to perform requests
@@ -657,6 +665,7 @@ static void LoRaMacEnableRequests( LoRaMacRequestHandling_t requestState );
  */
 static void LoRaMacCheckForRxAbort( void );
 
+#if 0
 /*!
  * \brief This function verifies if a beacon acquisition MLME
  *        request was pending
@@ -664,6 +673,7 @@ static void LoRaMacCheckForRxAbort( void );
  * \retval 1: Request pending, 0: no request pending
  */
 static uint8_t LoRaMacCheckForBeaconAcquisition( void );
+#endif
 
 /*!
  * \brief Returns true, if the device must apply the minium datarate
@@ -793,14 +803,18 @@ static void OnRadioRxTimeout( void )
 
 static void UpdateRxSlotIdleState( void )
 {
+#if 0
     if( Nvm.MacGroup2.DeviceClass != CLASS_C )
     {
+#endif
         MacCtx.RxSlot = RX_SLOT_NONE;
+#if 0
     }
     else
     {
         MacCtx.RxSlot = RX_SLOT_WIN_CLASS_C;
     }
+#endif
 }
 
 static void ProcessRadioTxDone( void )
@@ -809,10 +823,14 @@ static void ProcessRadioTxDone( void )
     PhyParam_t phyParam;
     SetBandTxDoneParams_t txDone;
 
+#if 0
     if( Nvm.MacGroup2.DeviceClass != CLASS_C )
     {
+#endif
         Radio.Sleep( );
+#if 0
     }
+#endif
 
     // Setup timers
     CRITICAL_SECTION_BEGIN( );
@@ -919,6 +937,7 @@ static void ProcessRadioRxDone( void )
         TimerStop( &MacCtx.RxWindowTimer2 );
     }
 
+#if 0
     // This function must be called even if we are not in class b mode yet.
     if( LoRaMacClassBRxBeacon( payload, size ) == true )
     {
@@ -942,6 +961,7 @@ static void ProcessRadioRxDone( void )
             MacCtx.McpsIndication.RxSlot = RX_SLOT_WIN_CLASS_B_MULTICAST_SLOT;
         }
     }
+#endif
 
     // Abort on empty radio frames
     if( size == 0 )
@@ -1150,6 +1170,7 @@ static void ProcessRadioRxDone( void )
                 return;
             }
 
+#if 0
             // Handle Class B
             // Check if we expect a ping or a multicast slot.
             if( Nvm.MacGroup2.DeviceClass == CLASS_B )
@@ -1169,6 +1190,7 @@ static void ProcessRadioRxDone( void )
                     LoRaMacClassBSetFPendingBit( macMsgData.FHDR.DevAddr, ( uint8_t ) macMsgData.FHDR.FCtrl.Bits.FPending );
                 }
             }
+#endif
 
             // Store device address
             MacCtx.McpsIndication.DevAddress = macMsgData.FHDR.DevAddr;
@@ -1184,6 +1206,7 @@ static void ProcessRadioRxDone( void )
             //Check if it is a multicast message
             multicast = 0;
             downLinkCounter = 0;
+#if 0
             for( uint8_t i = 0; i < LORAMAC_MAX_MC_CTX; i++ )
             {
                 if( ( Nvm.MacGroup2.MulticastChannelList[i].ChannelParams.Address == macMsgData.FHDR.DevAddr ) &&
@@ -1210,6 +1233,7 @@ static void ProcessRadioRxDone( void )
                 PrepareRxDoneAbort( );
                 return;
             }
+#endif
 
             // Get downlink frame counter value
             macCryptoStatus = GetFCntDown( addrID, fType, &macMsgData, Nvm.MacGroup2.Version, &fCntID, &downLinkCounter );
@@ -1432,20 +1456,28 @@ static void ProcessRadioRxDone( void )
         }
     }
 
+#if 0
     if( MacCtx.McpsIndication.RxSlot != RX_SLOT_WIN_CLASS_C )
     {
+#endif
         MacCtx.MacFlags.Bits.MacDone = 1;
+#if 0
     }
+#endif
 
     UpdateRxSlotIdleState( );
 }
 
 static void ProcessRadioTxTimeout( void )
 {
+#if 0
     if( Nvm.MacGroup2.DeviceClass != CLASS_C )
     {
+#endif
         Radio.Sleep( );
+#if 0
     }
+#endif
     UpdateRxSlotIdleState( );
 
     MacCtx.McpsConfirm.Status = LORAMAC_EVENT_INFO_STATUS_TX_TIMEOUT;
@@ -1459,11 +1491,14 @@ static void ProcessRadioTxTimeout( void )
 
 static void HandleRadioRxErrorTimeout( LoRaMacEventInfoStatus_t rx1EventInfoStatus, LoRaMacEventInfoStatus_t rx2EventInfoStatus )
 {
+#if 0
     bool classBRx = false;
 
     if( Nvm.MacGroup2.DeviceClass != CLASS_C )
     {
+#endif
         Radio.Sleep( );
+#if 0
     }
 
     if( LoRaMacClassBIsBeaconExpected( ) == true )
@@ -1490,6 +1525,7 @@ static void HandleRadioRxErrorTimeout( LoRaMacEventInfoStatus_t rx1EventInfoStat
 
     if( classBRx == false )
     {
+#endif
         if( MacCtx.RxSlot == RX_SLOT_WIN_1 )
         {
             if( MacCtx.NodeAckRequested == true )
@@ -1513,7 +1549,9 @@ static void HandleRadioRxErrorTimeout( LoRaMacEventInfoStatus_t rx1EventInfoStat
             LoRaMacConfirmQueueSetStatusCmn( rx2EventInfoStatus );
             MacCtx.MacFlags.Bits.MacDone = 1;
         }
+#if 0
     }
+#endif
 
     UpdateRxSlotIdleState( );
 }
@@ -1624,8 +1662,10 @@ static void LoRaMacHandleRequestEvents( void )
             }
         }
 
+#if 0
         // Start beaconing again
         LoRaMacClassBResumeBeaconing( );
+#endif
 
         // Procedure done. Reset variables.
         MacCtx.MacFlags.Bits.MacDone = 0;
@@ -1761,6 +1801,7 @@ static void LoRaMacHandleMlmeRequest( void )
     }
 }
 
+#if 0
 static uint8_t LoRaMacCheckForBeaconAcquisition( void )
 {
     if( ( LoRaMacConfirmQueueIsCmdActive( MLME_BEACON_ACQUISITION ) == true ) &&
@@ -1774,6 +1815,7 @@ static uint8_t LoRaMacCheckForBeaconAcquisition( void )
     }
     return 0x00;
 }
+#endif
 
 static bool CheckForMinimumAbpDatarate( bool adr, ActivationType_t activation, bool datarateChanged )
 {
@@ -1859,6 +1901,7 @@ static void LoRaMacHandleNvm( LoRaMacNvmData_t* nvmData )
         notifyFlags |= LORAMAC_NVM_NOTIFY_FLAG_REGION_GROUP2;
     }
 
+#if 0
     // ClassB
     crc = Crc32( ( uint8_t* ) &nvmData->ClassB, sizeof( nvmData->ClassB ) -
                                                 sizeof( nvmData->ClassB.Crc32 ) );
@@ -1867,6 +1910,7 @@ static void LoRaMacHandleNvm( LoRaMacNvmData_t* nvmData )
         nvmData->ClassB.Crc32 = crc;
         notifyFlags |= LORAMAC_NVM_NOTIFY_FLAG_CLASS_B;
     }
+#endif
 
     CallNvmDataChangeCallback( notifyFlags );
 }
@@ -1890,7 +1934,9 @@ void LoRaMacProcess( void )
     uint8_t noTx = false;
 
     LoRaMacHandleIrqEvents( );
+#if 0
     LoRaMacClassBProcess( );
+#endif
 
     // MAC proceeded a state and is ready to check
     if( MacCtx.MacFlags.Bits.MacDone == 1 )
@@ -1899,10 +1945,12 @@ void LoRaMacProcess( void )
         LoRaMacCheckForRxAbort( );
 
         // An error occurs during transmitting
+#if 0
         if( IsRequestPending( ) > 0 )
         {
             noTx |= LoRaMacCheckForBeaconAcquisition( );
         }
+#endif
 
         if( noTx == 0x00 )
         {
@@ -1918,10 +1966,12 @@ void LoRaMacProcess( void )
     LoRaMacHandleRejoinEvents( );
 #endif
 
+#if 0
     if( MacCtx.RxSlot == RX_SLOT_WIN_CLASS_C )
     {
         OpenContinuousRxCWindow( );
     }
+#endif
     if( MacCtx.MacFlags.Bits.NvmHandle == 1 )
     {
         MacCtx.MacFlags.Bits.NvmHandle = 0;
@@ -2055,16 +2105,19 @@ static LoRaMacStatus_t SwitchClass( DeviceClass_t deviceClass )
 {
     LoRaMacStatus_t status = LORAMAC_STATUS_PARAMETER_INVALID;
 
+#if 0
     switch( Nvm.MacGroup2.DeviceClass )
     {
         case CLASS_A:
         {
             if( deviceClass == CLASS_A )
             {
+#endif
                 // Revert back RxC parameters
                 Nvm.MacGroup2.MacParams.RxCChannel = Nvm.MacGroup2.MacParams.Rx2Channel;
 
                 status = LORAMAC_STATUS_OK;
+#if 0
             }
             if( deviceClass == CLASS_B )
             {
@@ -2148,6 +2201,7 @@ static LoRaMacStatus_t SwitchClass( DeviceClass_t deviceClass )
             break;
         }
     }
+#endif
 
     return status;
 }
@@ -2609,7 +2663,9 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
 
                     // Apply the new system time.
                     SysTimeSet( sysTime );
+#if 0
                     LoRaMacClassBDeviceTimeAns( );
+#endif
                     MacCtx.McpsIndication.DeviceTimeAnsReceived = true;
                 }
                 else
@@ -2619,6 +2675,7 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                 }
                 break;
             }
+#if 0
             case SRV_MAC_PING_SLOT_INFO_ANS:
             {
                 if( LoRaMacConfirmQueueIsCmdActive( MLME_PING_SLOT_INFO ) == true )
@@ -2686,6 +2743,7 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                     LoRaMacCommandsAddCmd( MOTE_MAC_BEACON_FREQ_ANS, macCmdPayload, 1 );
                 }
                 break;
+#endif
             default:
                 // Unknown command. ABORT MAC commands processing
                 return;
@@ -2882,6 +2940,7 @@ LoRaMacStatus_t SendReJoinReq( JoinReqIdentifier_t joinReqType )
     return status;
 }
 
+#if 0
 static LoRaMacStatus_t CheckForClassBCollision( void )
 {
     if( LoRaMacClassBIsBeaconExpected( ) == true )
@@ -2902,6 +2961,7 @@ static LoRaMacStatus_t CheckForClassBCollision( void )
     }
     return LORAMAC_STATUS_OK;
 }
+#endif
 
 static void ComputeRxWindowParameters( void )
 {
@@ -3006,11 +3066,13 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
     NextChanParams_t nextChan;
 
     // Check class b collisions
+#if 0
     status = CheckForClassBCollision( );
     if( status != LORAMAC_STATUS_OK )
     {
         return status;
     }
+#endif
 
     // Update back-off
     CalculateBackOff( );
@@ -3180,8 +3242,10 @@ static void RemoveMacCommands( LoRaMacRxSlot_t rxSlot, LoRaMacFrameCtrl_t fCtrl,
 
 static void ResetMacParameters( bool isRejoin )
 {
+#if 0
     LoRaMacClassBCallback_t classBCallbacks;
     LoRaMacClassBParams_t classBParams;
+#endif
 
     if( isRejoin == false )
     {
@@ -3245,11 +3309,14 @@ static void ResetMacParameters( bool isRejoin )
     MacCtx.RxWindow2Config.RxSlot = RX_SLOT_WIN_2;
     MacCtx.RxWindow2Config.NetworkActivation = Nvm.MacGroup2.NetworkActivation;
 
+#if 0
     // Initialize RxC config parameters.
     MacCtx.RxWindowCConfig = MacCtx.RxWindow2Config;
     MacCtx.RxWindowCConfig.RxContinuous = true;
     MacCtx.RxWindowCConfig.RxSlot = RX_SLOT_WIN_CLASS_C;
+#endif
 
+#if 0
     // Initialize class b
     // Apply callback
     classBCallbacks.GetTemperatureLevel = NULL;
@@ -3273,6 +3340,7 @@ static void ResetMacParameters( bool isRejoin )
     classBParams.NetworkActivation = &Nvm.MacGroup2.NetworkActivation;
 
     LoRaMacClassBInit( &classBParams, &classBCallbacks, &Nvm.ClassB );
+#endif
 }
 
 #if 0
@@ -3310,6 +3378,7 @@ static void RxWindowSetup( TimerEvent_t* rxTimer, RxConfigParams_t* rxConfig )
     }
 }
 
+#if 0
 static void OpenContinuousRxCWindow( void )
 {
     // Compute RxC windows parameters
@@ -3332,6 +3401,7 @@ static void OpenContinuousRxCWindow( void )
         MacCtx.RxSlot = MacCtx.RxWindowCConfig.RxSlot;
     }
 }
+#endif
 
 LoRaMacStatus_t PrepareFrame( LoRaMacHeader_t* macHdr, LoRaMacFrameCtrl_t* fCtrl, uint8_t fPort, void* fBuffer, uint16_t fBufferSize )
 {
@@ -3462,6 +3532,7 @@ LoRaMacStatus_t SendFrameOnChannel( uint8_t channel )
     MacCtx.McpsConfirm.TxTimeOnAir = MacCtx.TxTimeOnAir;
     MacCtx.MlmeConfirm.TxTimeOnAir = MacCtx.TxTimeOnAir;
 
+#if 0
     if( LoRaMacClassBIsBeaconModeActive( ) == true )
     {
         // Currently, the Time-On-Air can only be computed when the radio is configured with
@@ -3481,6 +3552,7 @@ LoRaMacStatus_t SendFrameOnChannel( uint8_t channel )
     }
 
     LoRaMacClassBHaltBeaconing( );
+#endif
 
     // Secure frame
     status = SecureFrame( Nvm.MacGroup1.ChannelsDatarate, MacCtx.Channel );
@@ -3569,12 +3641,14 @@ LoRaMacStatus_t RestoreNvmData( LoRaMacNvmData_t* nvm )
         memcpy1( ( uint8_t* ) &Nvm.MacGroup2, ( uint8_t* ) &nvm->MacGroup2,
                  sizeof( Nvm.MacGroup2 ) );
 
+#if 0
         // Initialize RxC config parameters.
         MacCtx.RxWindowCConfig.Channel = MacCtx.Channel;
         MacCtx.RxWindowCConfig.Frequency = Nvm.MacGroup2.MacParams.RxCChannel.Frequency;
         MacCtx.RxWindowCConfig.DownlinkDwellTime = Nvm.MacGroup2.MacParams.DownlinkDwellTime;
         MacCtx.RxWindowCConfig.RxContinuous = true;
         MacCtx.RxWindowCConfig.RxSlot = RX_SLOT_WIN_CLASS_C;
+#endif
 
         // The public/private network flag may change upon reloading MacGroup2
         // from NVM and we thus need to synchronize the radio. The same function
@@ -3609,6 +3683,7 @@ LoRaMacStatus_t RestoreNvmData( LoRaMacNvmData_t* nvm )
                  sizeof( Nvm.RegionGroup2 ) );
     }
 
+#if 0
     crc = Crc32( ( uint8_t* ) &nvm->ClassB, sizeof( nvm->ClassB ) -
                                             sizeof( nvm->ClassB.Crc32 ) );
     if( crc == nvm->ClassB.Crc32 )
@@ -3616,6 +3691,7 @@ LoRaMacStatus_t RestoreNvmData( LoRaMacNvmData_t* nvm )
         memcpy1( ( uint8_t* ) &Nvm.ClassB,( uint8_t* ) &nvm->ClassB,
                  sizeof( Nvm.ClassB ) );
     }
+#endif
 
     return LORAMAC_STATUS_OK;
 }
@@ -3797,6 +3873,7 @@ static void CallNvmDataChangeCallback( uint16_t notifyFlags )
     }
 }
 
+#if 0
 static uint8_t IsRequestPending( void )
 {
     if( ( MacCtx.MacFlags.Bits.MlmeReq == 1 ) ||
@@ -3806,7 +3883,7 @@ static uint8_t IsRequestPending( void )
     }
     return 0;
 }
-
+#endif
 
 LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacCallback_t* callbacks, LoRaMacRegion_t region )
 {
@@ -4025,10 +4102,12 @@ LoRaMacStatus_t LoRaMacStop( void )
 {
     if( LoRaMacIsBusy( ) == false )
     {
+#if 0
         if( Nvm.MacGroup2.DeviceClass == CLASS_C )
         {
             Radio.Sleep( );
         }
+#endif
         MacCtx.MacState = LORAMAC_STOPPED;
         return LORAMAC_STATUS_OK;
     }
@@ -4361,7 +4440,11 @@ LoRaMacStatus_t LoRaMacMibGetRequestConfirm( MibRequestConfirm_t* mibGet )
         }
         default:
         {
+#if 0
             status = LoRaMacClassBMibGetRequestConfirm( mibGet );
+#else
+            status = LORAMAC_STATUS_SERVICE_UNKNOWN;
+#endif
             break;
         }
     }
@@ -4794,6 +4877,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
             }
             break;
         }
+#if 0
         case MIB_RXC_CHANNEL:
         {
             verify.DatarateParams.Datarate = mibSet->Param.RxCChannel.Datarate;
@@ -4835,6 +4919,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
             }
             break;
         }
+#endif
         case MIB_CHANNELS_DEFAULT_MASK:
         {
             chanMaskSet.ChannelsMaskIn = mibSet->Param.ChannelsDefaultMask;
@@ -5105,7 +5190,11 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
         }
         default:
         {
+#if 0
             status = LoRaMacMibClassBSetRequestConfirm( mibSet );
+#else
+            status = LORAMAC_STATUS_SERVICE_UNKNOWN;
+#endif
             break;
         }
     }
@@ -5475,6 +5564,7 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
             }
             break;
         }
+#if 0
         case MLME_PING_SLOT_INFO:
         {
             if( Nvm.MacGroup2.DeviceClass == CLASS_A )
@@ -5521,6 +5611,7 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
             }
             break;
         }
+#endif
         default:
             break;
     }
@@ -5579,6 +5670,7 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t* mcpsRequest )
     memset1( ( uint8_t* ) &MacCtx.McpsConfirm, 0, sizeof( MacCtx.McpsConfirm ) );
     MacCtx.McpsConfirm.Status = LORAMAC_EVENT_INFO_STATUS_ERROR;
 
+#if 0
     // Apply confirmed downlinks, if the device has not received a valid
     // downlink after a join accept.
     if( ( Nvm.MacGroup2.NetworkActivation == ACTIVATION_TYPE_OTAA ) &&
@@ -5588,6 +5680,7 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t* mcpsRequest )
     {
         request.Type = MCPS_CONFIRMED;
     }
+#endif
 
     switch( request.Type )
     {
@@ -5776,8 +5869,10 @@ LoRaMacStatus_t LoRaMacDeInitialization( void )
         TimerStop( &MacCtx.RxWindowTimer1 );
         TimerStop( &MacCtx.RxWindowTimer2 );
 
+#if 0
         // Take care about class B
         LoRaMacClassBHaltBeaconing( );
+#endif
 
         // Reset Mac parameters
         ResetMacParameters( false );
