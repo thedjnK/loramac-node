@@ -137,6 +137,7 @@ struct Radio_s
      * \param [IN] freq         Channel RF frequency
      */
     void    ( *SetChannel )( uint32_t freq );
+#if 0
     /*!
      * \brief Checks if the channel is free for the given time
      *
@@ -150,6 +151,7 @@ struct Radio_s
      * \retval isFree         [true: Channel is free, false: Channel is not free]
      */
     bool    ( *IsChannelFree )( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh, uint32_t maxCarrierSenseTime );
+#endif
     /*!
      * \brief Generates a 32 bits random value based on the RSSI readings
      *
@@ -310,6 +312,7 @@ struct Radio_s
      * \brief Start a Channel Activity Detection
      */
     void    ( *StartCad )( void );
+#if 0
     /*!
      * \brief Sets the radio in continuous wave transmission mode
      *
@@ -318,6 +321,7 @@ struct Radio_s
      * \param [IN]: time       Transmission mode timeout [s]
      */
     void    ( *SetTxContinuousWave )( uint32_t freq, int8_t power, uint16_t time );
+#endif
     /*!
      * \brief Reads the current RSSI value
      *

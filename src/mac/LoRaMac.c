@@ -521,7 +521,9 @@ LoRaMacStatus_t SendFrameOnChannel( uint8_t channel );
  * \param [IN] power       RF output power to be set.
  * \retval status          Status of the operation.
  */
+#if 0
 LoRaMacStatus_t SetTxContinuousWave( uint16_t timeout, uint32_t frequency, uint8_t power );
+#endif
 
 #if 0
 /*!
@@ -1794,10 +1796,12 @@ static void LoRaMacHandleMlmeRequest( void )
             MacCtx.ChannelsNbTransCounter = 0;
             MacCtx.MacState &= ~LORAMAC_TX_RUNNING;
         }
+#if 0
         else if( LoRaMacConfirmQueueIsCmdActive( MLME_TXCW ) == true )
         {
             MacCtx.MacState &= ~LORAMAC_TX_RUNNING;
         }
+#endif
     }
 }
 
@@ -3587,6 +3591,7 @@ printk("\n");
     return LORAMAC_STATUS_OK;
 }
 
+#if 0
 LoRaMacStatus_t SetTxContinuousWave( uint16_t timeout, uint32_t frequency, uint8_t power )
 {
     Radio.SetTxContinuousWave( frequency, power, timeout );
@@ -3595,6 +3600,7 @@ LoRaMacStatus_t SetTxContinuousWave( uint16_t timeout, uint32_t frequency, uint8
 
     return LORAMAC_STATUS_OK;
 }
+#endif
 
 LoRaMacNvmData_t* GetNvmData( void )
 {
@@ -5549,11 +5555,13 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
             }
             break;
         }
+#if 0
         case MLME_TXCW:
         {
             status = SetTxContinuousWave( mlmeRequest->Req.TxCw.Timeout, mlmeRequest->Req.TxCw.Frequency, mlmeRequest->Req.TxCw.Power );
             break;
         }
+#endif
         case MLME_DEVICE_TIME:
         {
             // LoRaMac will send this command piggy-pack

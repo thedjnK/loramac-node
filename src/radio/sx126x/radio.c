@@ -242,6 +242,7 @@ void RadioRx( uint32_t timeout );
  */
 void RadioStartCad( void );
 
+#if 0
 /*!
  * \brief Sets the radio in continuous wave transmission mode
  *
@@ -250,6 +251,7 @@ void RadioStartCad( void );
  * \param [IN]: time       Transmission mode timeout [s]
  */
 void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time );
+#endif
 
 /*!
  * \brief Reads the current RSSI value
@@ -352,7 +354,9 @@ const struct Radio_s Radio =
     RadioGetStatus,
     RadioSetModem,
     RadioSetChannel,
+#if 0
     RadioIsChannelFree,
+#endif
     RadioRandom,
     RadioSetRxConfig,
     RadioSetTxConfig,
@@ -363,7 +367,9 @@ const struct Radio_s Radio =
     RadioStandby,
     RadioRx,
     RadioStartCad,
+#if 0
     RadioSetTxContinuousWave,
+#endif
     RadioRssi,
     RadioWrite,
     RadioRead,
@@ -491,6 +497,7 @@ SX126x_t SX126x;
 TimerEvent_t TxTimeoutTimer;
 TimerEvent_t RxTimeoutTimer;
 
+#if 0
 /*!
  * Returns the known FSK bandwidth registers value
  *
@@ -516,6 +523,7 @@ static uint8_t RadioGetFskBandwidthRegValue( uint32_t bandwidth )
     // ERROR: Value not found
     while( 1 );
 }
+#endif
 
 void RadioInit( RadioEvents_t *events )
 {
@@ -557,6 +565,7 @@ RadioState_t RadioGetStatus( void )
 
 void RadioSetModem( RadioModems_t modem )
 {
+#if 0
     switch( modem )
     {
     default:
@@ -567,6 +576,7 @@ void RadioSetModem( RadioModems_t modem )
         RadioPublicNetwork.Current = false;
         break;
     case MODEM_LORA:
+#endif
         SX126xSetPacketType( PACKET_TYPE_LORA );
         // Public/Private network register is reset when switching modems
         if( RadioPublicNetwork.Current != RadioPublicNetwork.Previous )
@@ -574,8 +584,10 @@ void RadioSetModem( RadioModems_t modem )
             RadioPublicNetwork.Current = RadioPublicNetwork.Previous;
             RadioSetPublicNetwork( RadioPublicNetwork.Current );
         }
+#if 0
         break;
     }
+#endif
 }
 
 void RadioSetChannel( uint32_t freq )
@@ -583,6 +595,7 @@ void RadioSetChannel( uint32_t freq )
     SX126xSetRfFrequency( freq );
 }
 
+#if 0
 bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh, uint32_t maxCarrierSenseTime )
 {
     bool     status           = true;
@@ -616,6 +629,7 @@ bool RadioIsChannelFree( uint32_t freq, uint32_t rxBandwidth, int16_t rssiThresh
     RadioSleep( );
     return status;
 }
+#endif
 
 uint32_t RadioRandom( void )
 {
@@ -658,6 +672,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
         MaxPayloadLength = 0xFF;
     }
 
+#if 0
     switch( modem )
     {
         case MODEM_FSK:
@@ -696,6 +711,7 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             break;
 
         case MODEM_LORA:
+#endif
             SX126xSetStopRxTimerOnPreambleDetect( false );
             SX126x.ModulationParams.PacketType = PACKET_TYPE_LORA;
             SX126x.ModulationParams.Params.LoRa.SpreadingFactor = ( RadioLoRaSpreadingFactors_t )datarate;
@@ -738,7 +754,11 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             SX126x.PacketParams.Params.LoRa.InvertIQ = ( RadioLoRaIQModes_t )iqInverted;
 
             RadioStandby( );
+#if 0
             RadioSetModem( ( SX126x.ModulationParams.PacketType == PACKET_TYPE_GFSK ) ? MODEM_FSK : MODEM_LORA );
+#else
+            RadioSetModem(MODEM_LORA);
+#endif
             SX126xSetModulationParams( &SX126x.ModulationParams );
             SX126xSetPacketParams( &SX126x.PacketParams );
             SX126xSetLoRaSymbNumTimeout( symbTimeout );
@@ -757,8 +777,10 @@ void RadioSetRxConfig( RadioModems_t modem, uint32_t bandwidth,
             // Timeout Max, Timeout handled directly in SetRx function
             RxTimeout = 0xFFFF;
 
+#if 0
             break;
     }
+#endif
 }
 
 void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
@@ -767,7 +789,7 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
                         bool fixLen, bool crcOn, bool freqHopOn,
                         uint8_t hopPeriod, bool iqInverted, uint32_t timeout )
 {
-
+#if 0
     switch( modem )
     {
         case MODEM_FSK:
@@ -804,6 +826,7 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
             break;
 
         case MODEM_LORA:
+#endif
             SX126x.ModulationParams.PacketType = PACKET_TYPE_LORA;
             SX126x.ModulationParams.Params.LoRa.SpreadingFactor = ( RadioLoRaSpreadingFactors_t ) datarate;
             SX126x.ModulationParams.Params.LoRa.Bandwidth =  Bandwidths[bandwidth];
@@ -844,11 +867,17 @@ void RadioSetTxConfig( RadioModems_t modem, int8_t power, uint32_t fdev,
             SX126x.PacketParams.Params.LoRa.InvertIQ = ( RadioLoRaIQModes_t )iqInverted;
 
             RadioStandby( );
+#if 0
             RadioSetModem( ( SX126x.ModulationParams.PacketType == PACKET_TYPE_GFSK ) ? MODEM_FSK : MODEM_LORA );
+#else
+            RadioSetModem(MODEM_LORA);
+#endif
             SX126xSetModulationParams( &SX126x.ModulationParams );
             SX126xSetPacketParams( &SX126x.PacketParams );
+#if 0
             break;
     }
+#endif
 
     // WORKAROUND - Modulation Quality with 500 kHz LoRa Bandwidth, see DS_SX1261-2_V1.2 datasheet chapter 15.1
     if( ( modem == MODEM_LORA ) && ( SX126x.ModulationParams.Params.LoRa.Bandwidth == LORA_BW_500 ) )
@@ -911,6 +940,7 @@ static uint32_t RadioGetLoRaBandwidthInHz( RadioLoRaBandwidths_t bw )
     return bandwidthInHz;
 }
 
+#if 0
 static uint32_t RadioGetGfskTimeOnAirNumerator( uint32_t datarate, uint8_t coderate,
                               uint16_t preambleLen, bool fixLen, uint8_t payloadLen,
                               bool crcOn )
@@ -927,6 +957,7 @@ static uint32_t RadioGetGfskTimeOnAirNumerator( uint32_t datarate, uint8_t coder
                ) << 3 
              );
 }
+#endif
 
 static uint32_t RadioGetLoRaTimeOnAirNumerator( uint32_t bandwidth,
                               uint32_t datarate, uint8_t coderate,
@@ -1001,6 +1032,7 @@ uint32_t RadioTimeOnAir( RadioModems_t modem, uint32_t bandwidth,
     uint32_t numerator = 0;
     uint32_t denominator = 1;
 
+#if 0
     switch( modem )
     {
     case MODEM_FSK:
@@ -1011,15 +1043,20 @@ uint32_t RadioTimeOnAir( RadioModems_t modem, uint32_t bandwidth,
             denominator = datarate;
         }
         break;
+
     case MODEM_LORA:
         {
+#endif
             numerator   = 1000U * RadioGetLoRaTimeOnAirNumerator( bandwidth, datarate,
                                                                   coderate, preambleLen,
                                                                   fixLen, payloadLen, crcOn );
             denominator = RadioGetLoRaBandwidthInHz( Bandwidths[bandwidth] );
+
+#if 0
         }
         break;
     }
+#endif
     // Perform integral ceil()
     return ( numerator + denominator - 1 ) / denominator;
 }
@@ -1031,14 +1068,19 @@ void RadioSend( uint8_t *buffer, uint8_t size )
                            IRQ_RADIO_NONE,
                            IRQ_RADIO_NONE );
 
+#if 0
     if( SX126xGetPacketType( ) == PACKET_TYPE_LORA )
     {
+#endif
         SX126x.PacketParams.Params.LoRa.PayloadLength = size;
+
+#if 0
     }
     else
     {
         SX126x.PacketParams.Params.Gfsk.PayloadLength = size;
     }
+#endif
     SX126xSetPacketParams( &SX126x.PacketParams );
 
     SX126xSendPayload( buffer, size, 0 );
@@ -1148,6 +1190,7 @@ void RadioStartCad( void )
     SX126xSetCad( );
 }
 
+#if 0
 void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time )
 {
     uint32_t timeout = ( uint32_t )time * 1000;
@@ -1159,6 +1202,7 @@ void RadioSetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time )
     TimerSetValue( &TxTimeoutTimer, timeout );
     TimerStart( &TxTimeoutTimer );
 }
+#endif
 
 int16_t RadioRssi( RadioModems_t modem )
 {
@@ -1187,10 +1231,13 @@ void RadioReadBuffer( uint32_t addr, uint8_t *buffer, uint8_t size )
 
 void RadioSetMaxPayloadLength( RadioModems_t modem, uint8_t max )
 {
+#if 0
     if( modem == MODEM_LORA )
     {
+#endif
         SX126x.PacketParams.Params.LoRa.PayloadLength = MaxPayloadLength = max;
         SX126xSetPacketParams( &SX126x.PacketParams );
+#if 0
     }
     else
     {
@@ -1200,6 +1247,7 @@ void RadioSetMaxPayloadLength( RadioModems_t modem, uint8_t max )
             SX126xSetPacketParams( &SX126x.PacketParams );
         }
     }
+#endif
 }
 
 void RadioSetPublicNetwork( bool enable )
