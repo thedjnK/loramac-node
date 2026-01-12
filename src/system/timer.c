@@ -183,7 +183,7 @@ bool TimerIsStarted( TimerEvent_t *obj )
 void TimerIrqHandler( void )
 {
     TimerEvent_t* cur;
-    TimerEvent_t* next;
+//    TimerEvent_t* next;
 
 //    uint32_t old =  RtcGetTimerContext( );
 //    uint32_t now =  RtcSetTimerContext( );
