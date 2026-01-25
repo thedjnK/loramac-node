@@ -736,7 +736,7 @@ static void LoRaMacHandleNvm( LoRaMacNvmData_t* nvmData );
  * \retval true: Response timeout has been elapsed, false: Response timeout
  *         has not been elapsed or startTimeInMs is 0.
  */
-static bool LoRaMacHandleResponseTimeout( TimerTime_t timeoutInMs, TimerTime_t startTimeInMs );
+//static bool LoRaMacHandleResponseTimeout( TimerTime_t timeoutInMs, TimerTime_t startTimeInMs );
 
 /*!
  * Structure used to store the radio Tx event data
@@ -1292,11 +1292,13 @@ static void ProcessRadioRxDone( void )
             }
 
             // MCPS Indication and ack requested handling
+#if 0
             if( multicast == 1 )
             {
                 MacCtx.McpsIndication.McpsIndication = MCPS_MULTICAST;
             }
             else
+#endif
             {
                 if( macHdr.Bits.MType == FRAME_TYPE_DATA_CONFIRMED_DOWN )
                 {
@@ -1307,6 +1309,7 @@ static void ProcessRadioRxDone( void )
                     }
                     MacCtx.McpsIndication.McpsIndication = MCPS_CONFIRMED;
 
+#if 0
                     // Handle response timeout for class c and class b downlinks
                     if( ( MacCtx.McpsIndication.RxSlot != RX_SLOT_WIN_1 ) &&
                         ( MacCtx.McpsIndication.RxSlot != RX_SLOT_WIN_2 ) )
@@ -1315,6 +1318,7 @@ static void ProcessRadioRxDone( void )
                         MacCtx.McpsIndication.ResponseTimeout = REGION_COMMON_CLASS_B_C_RESP_TIMEOUT;
                         MacCtx.ResponseTimeoutStartTime = RxDoneParams.LastRxDone;
                     }
+#endif
                 }
                 else
                 {
@@ -1921,6 +1925,7 @@ static void LoRaMacHandleNvm( LoRaMacNvmData_t* nvmData )
     CallNvmDataChangeCallback( notifyFlags );
 }
 
+#if 0
 static bool LoRaMacHandleResponseTimeout( TimerTime_t timeoutInMs, TimerTime_t startTimeInMs )
 {
     if( startTimeInMs != 0 )
@@ -1934,6 +1939,7 @@ static bool LoRaMacHandleResponseTimeout( TimerTime_t timeoutInMs, TimerTime_t s
     }
     return false;
 }
+#endif
 
 void LoRaMacProcess( void )
 {
@@ -1990,12 +1996,14 @@ static void OnTxDelayedTimerEvent( void* context )
     TimerStop( &MacCtx.TxDelayedTimer );
     MacCtx.MacState &= ~LORAMAC_TX_DELAYED;
 
+#if 0
     if( LoRaMacHandleResponseTimeout( REGION_COMMON_CLASS_B_C_RESP_TIMEOUT,
                                       MacCtx.ResponseTimeoutStartTime ) == true )
     {
         // Skip retransmission
         return;
     }
+#endif
 
     // Schedule frame, allow delayed frame transmissions
     switch( ScheduleTx( true ) )
@@ -2781,14 +2789,18 @@ LoRaMacStatus_t Send( LoRaMacHeader_t* macHdr, uint8_t fPort, void* fBuffer, uin
     fCtrl.Bits.Adr           = Nvm.MacGroup2.AdrCtrlOn;
 
     // Check class b
+#if 0
     if( Nvm.MacGroup2.DeviceClass == CLASS_B )
     {
         fCtrl.Bits.FPending      = 1;
     }
     else
     {
+#endif
         fCtrl.Bits.FPending      = 0;
+#if 0
     }
+#endif
 
     // Check server ack
     if( Nvm.MacGroup1.SrvAckRequested == true )
@@ -3119,6 +3131,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
                 {
                     // Allow delayed transmissions. We have to allow it in case
                     // the MAC must retransmit a frame with the frame repetitions
+//printk("\n\nDOING RETRANSMISSION THING\n\n");
                     MacCtx.MacState |= LORAMAC_TX_DELAYED;
                     TimerSetValue( &MacCtx.TxDelayedTimer, MacCtx.DutyCycleWaitTime );
                     TimerStart( &MacCtx.TxDelayedTimer );
@@ -5779,9 +5792,11 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t* mcpsRequest )
             }
         }
 
+#if 0
         // Verification of response timeout for class b and class c
         LoRaMacHandleResponseTimeout( REGION_COMMON_CLASS_B_C_RESP_TIMEOUT,
                                       MacCtx.ResponseTimeoutStartTime );
+#endif
 
         status = Send( &macHdr, fPort, fBuffer, fBufferSize );
         if( status == LORAMAC_STATUS_OK )
