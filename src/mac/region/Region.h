@@ -221,6 +221,7 @@ typedef enum ePhyAttribute
      * Next lower datarate.
      */
     PHY_NEXT_LOWER_TX_DR,
+#if 0
     /*!
      * Beacon interval in ms.
      */
@@ -307,6 +308,7 @@ typedef enum ePhyAttribute
      * The number of channels for the ping slot reception.
      */
     PHY_PING_SLOT_NB_CHANNELS,
+#endif
     /*!
      * The equivalent spreading factor value from datarate
      */
@@ -353,6 +355,7 @@ typedef enum eChannelsMask
     CHANNELS_DEFAULT_MASK
 }ChannelsMask_t;
 
+#if 0
 /*!
  * Structure containing the beacon format
  */
@@ -371,6 +374,7 @@ typedef struct sBeaconFormat
      */
     uint8_t Rfu2Size;
 }BeaconFormat_t;
+#endif
 
 /*!
  * Union for the structure uGetPhyParams
@@ -393,10 +397,12 @@ typedef union uPhyParam
      * Pointer to the channels.
      */
     ChannelParams_t* Channels;
+#if 0
     /*!
      * Beacon format
      */
     BeaconFormat_t BeaconFormat;
+#endif
     /*!
      * Duty Cycle Period
      */
@@ -432,12 +438,14 @@ typedef struct sGetPhyParams
      * PHY_MIN_RX_DR, PHY_MAX_PAYLOAD.
      */
     uint8_t DownlinkDwellTime;
+#if 0
     /*!
      * Specification of the downlink channel. Used in Class B only.
      * The parameter is needed for the following queries:
      * PHY_BEACON_CHANNEL_FREQ, PHY_PING_SLOT_CHANNEL_FREQ
      */
     uint8_t Channel;
+#endif
 }GetPhyParams_t;
 
 /*!
@@ -830,6 +838,7 @@ typedef struct sChannelRemoveParams
     uint8_t ChannelId;
 }ChannelRemoveParams_t;
 
+#if 0
 /*!
  * Parameter structure for the function RegionRxBeaconSetup
  */
@@ -848,7 +857,7 @@ typedef struct sRxBeaconSetupParams
      */
     uint32_t Frequency;
 }RxBeaconSetup_t;
-
+#endif
 
 
 /*!
@@ -1136,6 +1145,7 @@ bool RegionChannelsRemove( LoRaMacRegion_t region, ChannelRemoveParams_t* channe
  */
 uint8_t RegionApplyDrOffset( LoRaMacRegion_t region, uint8_t downlinkDwellTime, int8_t dr, int8_t drOffset );
 
+#if 0
 /*!
  * \brief Sets the radio into beacon reception mode
  *
@@ -1144,6 +1154,7 @@ uint8_t RegionApplyDrOffset( LoRaMacRegion_t region, uint8_t downlinkDwellTime, 
  * \param [out] outDr Datarate used to receive the beacon
  */
 void RegionRxBeaconSetup( LoRaMacRegion_t region, RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr );
+#endif
 
 /*!
  * \brief Gets the version of the regional parameters implementation.

@@ -250,6 +250,7 @@ PhyParam_t RegionEU868GetPhyParam( GetPhyParams_t* getPhy )
             phyParam.fValue = EU868_DEFAULT_ANTENNA_GAIN;
             break;
         }
+#if 0
         case PHY_BEACON_CHANNEL_FREQ:
         {
             phyParam.Value = EU868_BEACON_CHANNEL_FREQ;
@@ -277,6 +278,7 @@ PhyParam_t RegionEU868GetPhyParam( GetPhyParams_t* getPhy )
             phyParam.Value = EU868_PING_SLOT_CHANNEL_DR;
             break;
         }
+#endif
         case PHY_SF_FROM_DR:
         {
             phyParam.Value = DataratesEU868[getPhy->Datarate];
@@ -944,6 +946,7 @@ uint8_t RegionEU868ApplyDrOffset( uint8_t downlinkDwellTime, int8_t dr, int8_t d
     return datarate;
 }
 
+#if 0
 void RegionEU868RxBeaconSetup( RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr )
 {
     RegionCommonRxBeaconSetupParams_t regionCommonRxBeaconSetup;
@@ -961,3 +964,4 @@ void RegionEU868RxBeaconSetup( RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr )
     // Store downlink datarate
     *outDr = EU868_BEACON_CHANNEL_DR;
 }
+#endif

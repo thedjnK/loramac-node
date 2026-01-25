@@ -468,6 +468,7 @@ int8_t RegionCommonComputeTxPower( int8_t txPowerIndex, float maxEirp, float ant
     return phyTxPower;
 }
 
+#if 0
 void RegionCommonRxBeaconSetup( RegionCommonRxBeaconSetupParams_t* rxBeaconSetupParams )
 {
     bool rxContinuous = true;
@@ -495,6 +496,7 @@ void RegionCommonRxBeaconSetup( RegionCommonRxBeaconSetupParams_t* rxBeaconSetup
 
     Radio.Rx( rxBeaconSetupParams->RxTime );
 }
+#endif
 
 void RegionCommonCountNbOfEnabledChannels( RegionCommonCountNbOfEnabledChannelsParams_t* countNbOfEnabledChannelsParams,
                                            uint8_t* enabledChannels, uint8_t* nbEnabledChannels, uint8_t* nbRestrictedChannels )

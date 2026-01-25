@@ -324,6 +324,7 @@ typedef struct sLoRaMacParams
     uint16_t AdrAckDelay;
 }LoRaMacParams_t;
 
+#if 0
 /*!
  * LoRaMAC data structure for a PingSlotInfoReq \ref MLME_PING_SLOT_INFO
  *
@@ -407,6 +408,7 @@ typedef struct sBeaconInfo
         uint8_t Info[6];
     }GwSpecific;
 }BeaconInfo_t;
+#endif
 
 /*!
  * Enumeration containing the status of the operation of a MAC service
@@ -1148,6 +1150,7 @@ typedef enum eMlme
      * LoRaWAN end-device certification
      */
     MLME_TXCW,
+#if 0
     /*!
      * Derives the McKEKey from the AppKey or NwkKey.
      */
@@ -1156,12 +1159,14 @@ typedef enum eMlme
      * Derives a Multicast group key pair ( McAppSKey, McNwkSKey ) from McKey
      */
     MLME_DERIVE_MC_KEY_PAIR,
+#endif
     /*!
      * Initiates a DeviceTimeReq
      *
      * LoRaWAN end-device certification
      */
     MLME_DEVICE_TIME,
+#if 0
     /*!
      * The MAC uses this MLME primitive to indicate a beacon reception
      * status.
@@ -1196,6 +1201,7 @@ typedef enum eMlme
      * LoRaWAN end-device certification
      */
     MLME_BEACON_LOST,
+#endif
     /*!
      *
      * Indicates that the device hasn't received a RekeyConf and it reverts to the join state.
@@ -1241,6 +1247,7 @@ typedef struct sMlmeReqTxCw
     int8_t Power;
 }MlmeReqTxCw_t;
 
+#if 0
 /*!
  * LoRaMAC MLME-Request for the ping slot info service
  */
@@ -1278,6 +1285,7 @@ typedef struct sMlmeReqDeriveMcSessionKeyPair
      */
     AddressIdentifier_t GroupID;
 }MlmeReqDeriveMcSessionKeyPair_t;
+#endif
 
 /*!
  * LoRaMAC MLME-Request structure
@@ -1302,6 +1310,7 @@ typedef struct sMlmeReq
          * MLME-Request parameters for Tx continuous mode request
          */
         MlmeReqTxCw_t TxCw;
+#if 0
         /*!
          * MLME-Request parameters for a ping slot info request
          */
@@ -1314,6 +1323,7 @@ typedef struct sMlmeReq
          * MLME-Request to derive a Multicast group key pair ( McAppSKey, McNwkSKey ) from McKey
          */
         MlmeReqDeriveMcSessionKeyPair_t DeriveMcSessionKeyPair;
+#endif
     }Req;
 
     /*!
@@ -1352,6 +1362,7 @@ typedef struct sMlmeConfirm
      * Provides the number of retransmissions
      */
     uint8_t NbRetries;
+#if 0
     /*!
      * The delay which we have received through the
      * BeaconTimingAns
@@ -1361,6 +1372,7 @@ typedef struct sMlmeConfirm
      * The channel of the next beacon
      */
     uint8_t BeaconTimingChannel;
+#endif
 }MlmeConfirm_t;
 
 /*!
@@ -1376,11 +1388,13 @@ typedef struct sMlmeIndication
      * Status of the operation
      */
     LoRaMacEventInfoStatus_t Status;
+#if 0
     /*!
      * Beacon information. Only valid for \ref MLME_BEACON,
      * status \ref LORAMAC_EVENT_INFO_STATUS_BEACON_LOCKED
      */
     BeaconInfo_t BeaconInfo;
+#endif
 }MlmeIndication_t;
 
 /*!
@@ -1833,6 +1847,7 @@ typedef enum eMib
      * Time between periodic transmission of a Type 1 Rejoin request.
      */
     MIB_REJOIN_1_CYCLE,
+#if 0
     /*!
      * Beacon interval in ms
      */
@@ -1891,6 +1906,7 @@ typedef enum eMib
      * The allowed ranges are region specific. Please refer to \ref DR_0 to \ref DR_15 for details.
      */
      MIB_PING_SLOT_DATARATE,
+#endif
      /*!
       * LoRaWAN certification FPort handling state (ON/OFF)
       */
@@ -2251,12 +2267,14 @@ typedef union uMibParam
      * Related MIB type: \ref MIB_NVM_CTXS
      */
     LoRaMacNvmData_t* Contexts;
+#if 0
     /*
      * LoRaWAN MAC layer operating version when activated by ABP.
      *
      * Related MIB type: \ref MIB_ABP_LORAWAN_VERSION
      */
     Version_t AbpLrWanVersion;
+#endif
     /*
      * LoRaWAN MAC regional parameter version.
      *
@@ -2279,6 +2297,7 @@ typedef union uMibParam
      * Time in seconds between cyclic transmission of Type 2 Rejoin requests.
      */
     uint32_t Rejoin2CycleInSec;
+#if 0
     /*!
      * Beacon interval in ms
      *
@@ -2359,6 +2378,7 @@ typedef union uMibParam
      * Related MIB type: \ref MIB_PING_SLOT_DATARATE
      */
     int8_t PingSlotDatarate;
+#endif
     /*!
      * LoRaWAN certification FPort handling state (ON/OFF)
      *

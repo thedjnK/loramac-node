@@ -942,6 +942,7 @@ uint8_t RegionApplyDrOffset( LoRaMacRegion_t region, uint8_t downlinkDwellTime, 
     }
 }
 
+#if 0
 void RegionRxBeaconSetup( LoRaMacRegion_t region, RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr )
 {
     switch( region )
@@ -962,6 +963,7 @@ void RegionRxBeaconSetup( LoRaMacRegion_t region, RxBeaconSetup_t* rxBeaconSetup
         }
     }
 }
+#endif
 
 Version_t RegionGetVersion( void )
 {

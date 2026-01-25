@@ -148,6 +148,7 @@ extern "C"
  */
 #define EU868_DEFAULT_UPLINK_DWELL_TIME             0
 
+#if 0
 /*
  * CLASS B
  */
@@ -190,6 +191,7 @@ extern "C"
  * Ping slot channel datarate
  */
 #define EU868_PING_SLOT_CHANNEL_DR                  DR_3
+#endif
 
 /*!
  * Maximum number of bands
@@ -462,12 +464,14 @@ bool RegionEU868ChannelsRemove( ChannelRemoveParams_t* channelRemove  );
  */
 uint8_t RegionEU868ApplyDrOffset( uint8_t downlinkDwellTime, int8_t dr, int8_t drOffset );
 
+#if 0
 /*!
  * \brief Sets the radio into beacon reception mode
  *
  * \param [IN] rxBeaconSetup Pointer to the function parameters
  */
 void RegionEU868RxBeaconSetup( RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr );
+#endif
 
 /*! \} defgroup REGIONEU868 */
 
