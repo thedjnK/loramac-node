@@ -85,7 +85,7 @@
 /*!
  * Delay required to simulate an ABP join like an OTAA join
  */
-#define ABP_JOIN_PENDING_DELAY_MS                   10
+//#define ABP_JOIN_PENDING_DELAY_MS                   10
 
 /*!
  * LoRaMac internal states
@@ -100,7 +100,7 @@ enum eLoRaMacState
     LORAMAC_TX_DELAYED       = 0x00000020,
     LORAMAC_TX_CONFIG        = 0x00000040,
     LORAMAC_RX_ABORT         = 0x00000080,
-    LORAMAC_ABP_JOIN_PENDING = 0x00000100,
+//    LORAMAC_ABP_JOIN_PENDING = 0x00000100,
 };
 
 /*
@@ -269,7 +269,7 @@ typedef struct sLoRaMacCtx
     /*
      * Timer required to simulate an ABP join like an OTAA join
      */
-    TimerEvent_t AbpJoinPendingTimer;
+//    TimerEvent_t AbpJoinPendingTimer;
     /*
      * Buffer containing the MAC layer commands
      */
@@ -687,7 +687,7 @@ static uint8_t LoRaMacCheckForBeaconAcquisition( void );
  * \param [IN] datarateChanged Set to true, if the datarate was changed
  *                             with the LinkAdrReq.
  */
-static bool CheckForMinimumAbpDatarate( bool adr, ActivationType_t activation, bool datarateChanged );
+//static bool CheckForMinimumAbpDatarate( bool adr, ActivationType_t activation, bool datarateChanged );
 
 /*!
  * \brief This function handles join request
@@ -1821,6 +1821,7 @@ static uint8_t LoRaMacCheckForBeaconAcquisition( void )
 }
 #endif
 
+#if 0
 static bool CheckForMinimumAbpDatarate( bool adr, ActivationType_t activation, bool datarateChanged )
 {
     if( ( adr == true ) &&
@@ -1831,6 +1832,7 @@ static bool CheckForMinimumAbpDatarate( bool adr, ActivationType_t activation, b
     }
     return false;
 }
+#endif
 
 static void LoRaMacCheckForRxAbort( void )
 {
@@ -5082,6 +5084,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
             }
             break;
         }
+#if 0
         case MIB_ABP_LORAWAN_VERSION:
         {
             if( mibSet->Param.AbpLrWanVersion.Fields.Minor <= 1 )
@@ -5099,6 +5102,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
             }
             break;
         }
+#endif
         case MIB_IS_CERT_FPORT_ON:
         {
             Nvm.MacGroup2.IsCertPortOn = mibSet->Param.IsCertPortOn;
@@ -5407,6 +5411,7 @@ LoRaMacStatus_t LoRaMacMcChannelSetupRxParams( AddressIdentifier_t groupID, McRx
 }
 #endif
 
+#if 0
 /*!
  * \brief Function executed on AbpJoinPendingTimer timer event
  */
@@ -5436,12 +5441,13 @@ static void AbpJoinPendingStart( void )
     TimerSetValue( &MacCtx.AbpJoinPendingTimer, ABP_JOIN_PENDING_DELAY_MS );
     TimerStart( &MacCtx.AbpJoinPendingTimer );
 }
+#endif
 
 LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
 {
     LoRaMacStatus_t status = LORAMAC_STATUS_SERVICE_UNKNOWN;
     MlmeConfirmQueue_t queueElement;
-    bool isAbpJoinPending = false;
+//    bool isAbpJoinPending = false;
     uint8_t macCmdPayload[2] = { 0x00, 0x00 };
 
     if( mlmeRequest == NULL )
@@ -5498,6 +5504,7 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
                     Nvm.MacGroup1.ChannelsDatarate = RegionAlternateDr( Nvm.MacGroup2.Region, mlmeRequest->Req.Join.Datarate, ALTERNATE_DR_RESTORE );
                 }
             }
+#if 0
             else if( mlmeRequest->Req.Join.NetworkActivation == ACTIVATION_TYPE_ABP )
             {
                 // Restore default value for ChannelsDatarateChangedLinkAdrReq
@@ -5514,6 +5521,7 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
                 isAbpJoinPending = true;
                 status = LORAMAC_STATUS_OK;
             }
+#endif
             break;
         }
 #if 0
@@ -5638,10 +5646,12 @@ LoRaMacStatus_t LoRaMacMlmeRequest( MlmeReq_t* mlmeRequest )
     else
     {
         LoRaMacConfirmQueueAdd( &queueElement );
+#if 0
         if( isAbpJoinPending == true )
         {
             AbpJoinPendingStart( );
         }
+#endif
     }
     return status;
 }
@@ -5738,17 +5748,23 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t* mcpsRequest )
     datarate = MAX( datarate, ( int8_t )phyParam.Value );
 
     // Apply minimum datarate in this special case.
+#if 0
     if( CheckForMinimumAbpDatarate( Nvm.MacGroup2.AdrCtrlOn, Nvm.MacGroup2.NetworkActivation,
                                     Nvm.MacGroup2.ChannelsDatarateChangedLinkAdrReq ) == true )
     {
         datarate = ( int8_t )phyParam.Value;
     }
+#endif
 
     if( readyToSend == true )
     {
-        if( ( Nvm.MacGroup2.AdrCtrlOn == false ) ||
+        if( ( Nvm.MacGroup2.AdrCtrlOn == false )
+#if 0
+ ||
             ( CheckForMinimumAbpDatarate( Nvm.MacGroup2.AdrCtrlOn, Nvm.MacGroup2.NetworkActivation,
-                                          Nvm.MacGroup2.ChannelsDatarateChangedLinkAdrReq ) == true ) )
+                                          Nvm.MacGroup2.ChannelsDatarateChangedLinkAdrReq ) == true ) 
+#endif
+)
         {
             verify.DatarateParams.Datarate = datarate;
             verify.DatarateParams.UplinkDwellTime = Nvm.MacGroup2.MacParams.UplinkDwellTime;
