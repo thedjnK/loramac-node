@@ -1328,7 +1328,11 @@ static void ProcessRadioRxDone( void )
             }
 
             // Set the pending status
-            if( ( ( ( Nvm.MacGroup1.SrvAckRequested == true ) || ( macMsgData.FHDR.FCtrl.Bits.FPending > 0 ) ) && ( Nvm.MacGroup2.DeviceClass == CLASS_A ) ) ||
+            if( ( ( ( Nvm.MacGroup1.SrvAckRequested == true ) || ( macMsgData.FHDR.FCtrl.Bits.FPending > 0 ) ) 
+#if 0
+&& ( Nvm.MacGroup2.DeviceClass == CLASS_A )
+#endif
+ ) ||
                 ( MacCtx.McpsIndication.ResponseTimeout > 0 ) )
             {
                 MacCtx.McpsIndication.IsUplinkTxPending = 1;
@@ -3939,7 +3943,9 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
 
     // Set non zero variables to its default value
     Nvm.MacGroup2.Region = region;
+#if 0
     Nvm.MacGroup2.DeviceClass = CLASS_A;
+#endif
 
     // Setup version
     Nvm.MacGroup2.Version.Value = LORAMAC_VERSION;
@@ -4095,11 +4101,13 @@ LoRaMacStatus_t LoRaMacInitialization( LoRaMacPrimitives_t* primitives, LoRaMacC
         return LORAMAC_STATUS_MAC_COMMAD_ERROR;
     }
 
+#if 0
     // Set multicast downlink counter reference
     if( LoRaMacCryptoSetMulticastReference( Nvm.MacGroup2.MulticastChannelList ) != LORAMAC_CRYPTO_SUCCESS )
     {
         return LORAMAC_STATUS_CRYPTO_ERROR;
     }
+#endif
 
     // Random seed initialization
     srand1( Radio.Random( ) );
@@ -4211,11 +4219,13 @@ LoRaMacStatus_t LoRaMacMibGetRequestConfirm( MibRequestConfirm_t* mibGet )
 
     switch( mibGet->Type )
     {
+#if 0
         case MIB_DEVICE_CLASS:
         {
             mibGet->Param.Class = Nvm.MacGroup2.DeviceClass;
             break;
         }
+#endif
         case MIB_NETWORK_ACTIVATION:
         {
             mibGet->Param.NetworkActivation = Nvm.MacGroup2.NetworkActivation;

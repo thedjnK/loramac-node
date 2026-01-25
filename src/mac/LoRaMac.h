@@ -655,6 +655,7 @@ typedef struct sLoRaMacNvmDataGroup2
      * Mote Address
      */
     uint32_t DevAddr;
+#if 0
     /*!
     * Multicast channel list
     */
@@ -663,6 +664,7 @@ typedef struct sLoRaMacNvmDataGroup2
      * Actual device class
      */
     DeviceClass_t DeviceClass;
+#endif
     /*
      * Indicates if the node is connected to
      * a private or public network
@@ -1588,6 +1590,7 @@ typedef enum eMib
      * LoRaWAN Specification V1.1.0, chapter 6.1.1.3
      */
     MIB_APP_S_KEY,
+#if 0
     /*!
      * Multicast key encryption key
      *
@@ -1666,6 +1669,7 @@ typedef enum eMib
      * LoRaWAN - Secure element specification v1
      */
     MIB_MC_NWK_S_KEY_3,
+#endif
     /*!
      * Set the network type to public or private
      *
@@ -2038,6 +2042,7 @@ typedef union uMibParam
      * Related MIB type: \ref MIB_APP_S_KEY
      */
     uint8_t* AppSKey;
+#if 0
     /*!
      * Multicast key encryption key
      *
@@ -2116,6 +2121,7 @@ typedef union uMibParam
      * Related MIB type: \ref MIB_MC_NWK_S_KEY_2
      */
     uint8_t* McNwkSKey3;
+#endif
     /*!
      * Enable or disable a public network
      *
@@ -2548,10 +2554,12 @@ typedef enum eLoRaMacStatus
      * An error in the Confirm Queue module is occurred
      */
     LORAMAC_STATUS_CONFIRM_QUEUE_ERROR,
+#if 0
     /*!
      * The multicast group doesn't exist
      */
     LORAMAC_STATUS_MC_GROUP_UNDEFINED,
+#endif
     /*!
      * Undefined error occurred
      */
@@ -2747,6 +2755,7 @@ LoRaMacStatus_t LoRaMacChannelAdd( uint8_t id, ChannelParams_t params );
  */
 LoRaMacStatus_t LoRaMacChannelRemove( uint8_t id );
 
+#if 0
 /*!
  * \brief   LoRaMAC multicast channel setup service
  *
@@ -2775,6 +2784,7 @@ LoRaMacStatus_t LoRaMacMcChannelSetup( McChannelParams_t *channel );
  *          \ref LORAMAC_STATUS_MC_GROUP_UNDEFINED.
  */
 LoRaMacStatus_t LoRaMacMcChannelDelete( AddressIdentifier_t groupID );
+#endif
 
 /*!
  * \brief   LoRaMAC multicast channel get groupId from MC address.
