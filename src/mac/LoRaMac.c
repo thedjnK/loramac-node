@@ -1309,10 +1309,12 @@ static void ProcessRadioRxDone( void )
                 if( macHdr.Bits.MType == FRAME_TYPE_DATA_CONFIRMED_DOWN )
                 {
                     Nvm.MacGroup1.SrvAckRequested = true;
+#if 0
                     if( Nvm.MacGroup2.Version.Fields.Minor == 0 )
                     {
                         Nvm.MacGroup1.LastRxMic = macMsgData.MIC;
                     }
+#endif
                     MacCtx.McpsIndication.McpsIndication = MCPS_CONFIRMED;
 
 #if 0
@@ -2101,10 +2103,12 @@ static LoRaMacCryptoStatus_t GetFCntDown( AddressIdentifier_t addrID, FType_t fT
                     *fCntID = N_FCNT_DOWN;
                 }
             }
+#if 0
             else
             { // For LoRaWAN 1.0.X
                 *fCntID = FCNT_DOWN;
             }
+#endif
             break;
 #if 0
         case MULTICAST_0_ADDR:

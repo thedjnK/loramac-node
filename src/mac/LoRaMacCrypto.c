@@ -1350,7 +1350,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSecureMessage( uint32_t fCntUp, uint8_t txDr,
     }
 
     // Compute mic
-#if( USE_LRWAN_1_1_X_CRYPTO == 1 )
+//#if( USE_LRWAN_1_1_X_CRYPTO == 1 )
     if( CryptoNvm->LrWanVersion.Fields.Minor == 1 )
     {
         uint32_t cmacS = 0;
@@ -1371,8 +1371,9 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSecureMessage( uint32_t fCntUp, uint8_t txDr,
         // MIC = cmacS[0..1] | cmacF[0..1]
         macMsg->MIC = ( ( cmacF << 16 ) & 0xFFFF0000 ) | ( cmacS & 0x0000FFFF );
     }
+#if 0
     else
-#endif
+//#endif
     {
         // MIC = cmacF[0..3]
         // The IsAck parameter is every time false since the ConfFCnt field is not used in legacy mode.
@@ -1382,6 +1383,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSecureMessage( uint32_t fCntUp, uint8_t txDr,
             return retval;
         }
     }
+#endif
 
     // Re-serialize message to add the MIC
     if( LoRaMacSerializerData( macMsg ) != LORAMAC_SERIALIZER_SUCCESS )
@@ -1435,11 +1437,13 @@ LoRaMacCryptoStatus_t LoRaMacCryptoUnsecureMessage( AddressIdentifier_t addrID, 
 
     // Compute mic
     bool isAck = macMsg->FHDR.FCtrl.Bits.Ack;
+#if 0
     if( CryptoNvm->LrWanVersion.Fields.Minor == 0 )
     {
         // In legacy mode the IsAck parameter is forced to be false since the ConfFCnt field is not used.
         isAck = false;
     }
+#endif
 
     // Verify mic
     retval = VerifyCmacB0( macMsg->Buffer, ( macMsg->BufSize - LORAMAC_MIC_FIELD_SIZE ), micComputationKeyID, isAck, DOWNLINK, address, fCntDown, macMsg->MIC );
