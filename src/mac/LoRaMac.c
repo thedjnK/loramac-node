@@ -907,7 +907,9 @@ static void ProcessRadioRxDone( void )
 
     uint32_t downLinkCounter = 0;
     uint32_t address = Nvm.MacGroup2.DevAddr;
+#if 0
     uint8_t multicast = 0;
+#endif
     AddressIdentifier_t addrID = UNICAST_DEV_ADDR;
     FCntIdentifier_t fCntID;
     uint8_t macCmdPayload[2] = { 0 };
@@ -920,7 +922,9 @@ static void ProcessRadioRxDone( void )
     MacCtx.McpsIndication.Snr = snr;
     MacCtx.McpsIndication.RxSlot = MacCtx.RxSlot;
     MacCtx.McpsIndication.Port = 0;
+#if 0
     MacCtx.McpsIndication.Multicast = 0;
+#endif
     MacCtx.McpsIndication.IsUplinkTxPending = 0;
     MacCtx.McpsIndication.Buffer = NULL;
     MacCtx.McpsIndication.BufferSize = 0;
@@ -1205,10 +1209,10 @@ static void ProcessRadioRxDone( void )
                 return;
             }
 
-            //Check if it is a multicast message
-            multicast = 0;
             downLinkCounter = 0;
 #if 0
+            //Check if it is a multicast message
+            multicast = 0;
             for( uint8_t i = 0; i < LORAMAC_MAX_MC_CTX; i++ )
             {
                 if( ( Nvm.MacGroup2.MulticastChannelList[i].ChannelParams.Address == macMsgData.FHDR.DevAddr ) &&
@@ -1274,7 +1278,9 @@ static void ProcessRadioRxDone( void )
             }
 
             MacCtx.McpsIndication.Status = LORAMAC_EVENT_INFO_STATUS_OK;
+#if 0
             MacCtx.McpsIndication.Multicast = multicast;
+#endif
             MacCtx.McpsIndication.Buffer = NULL;
             MacCtx.McpsIndication.BufferSize = 0;
             MacCtx.McpsIndication.DownLinkCounter = downLinkCounter;
@@ -2100,6 +2106,7 @@ static LoRaMacCryptoStatus_t GetFCntDown( AddressIdentifier_t addrID, FType_t fT
                 *fCntID = FCNT_DOWN;
             }
             break;
+#if 0
         case MULTICAST_0_ADDR:
             *fCntID = MC_FCNT_DOWN_0;
             break;
@@ -2112,6 +2119,7 @@ static LoRaMacCryptoStatus_t GetFCntDown( AddressIdentifier_t addrID, FType_t fT
         case MULTICAST_3_ADDR:
             *fCntID = MC_FCNT_DOWN_3;
             break;
+#endif
         default:
             return LORAMAC_CRYPTO_FAIL_FCNT_ID;
     }

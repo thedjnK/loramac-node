@@ -222,6 +222,7 @@ typedef enum eLoRaMacRxSlot
      * LoRaMAC receive window 2
      */
     RX_SLOT_WIN_2,
+#if 0
     /*!
      * LoRaMAC receive window 2 for class c - continuous listening
      */
@@ -238,6 +239,7 @@ typedef enum eLoRaMacRxSlot
      * LoRaMAC class b multicast slot window
      */
     RX_SLOT_WIN_CLASS_B_MULTICAST_SLOT,
+#endif
     /*!
      * LoRaMAC no active receive window
      */
@@ -466,6 +468,7 @@ typedef enum eLoRaMacEventInfoStatus
      * Message integrity check failure
      */
     LORAMAC_EVENT_INFO_STATUS_MIC_FAIL,
+#if 0
     /*!
      * ToDo
      */
@@ -482,6 +485,7 @@ typedef enum eLoRaMacEventInfoStatus
      * ToDo
      */
     LORAMAC_EVENT_INFO_STATUS_BEACON_NOT_FOUND,
+#endif
 }LoRaMacEventInfoStatus_t;
 
 /*!
@@ -835,10 +839,12 @@ typedef enum eMcps
      * Confirmed LoRaMAC frame
      */
     MCPS_CONFIRMED,
+#if 0
     /*!
      * Multicast LoRaMAC frame
      */
     MCPS_MULTICAST,
+#endif
     /*!
      * Proprietary frame
      */
@@ -1020,10 +1026,12 @@ typedef struct sMcpsIndication
      * Status of the operation
      */
     LoRaMacEventInfoStatus_t Status;
+#if 0
     /*!
      * Multicast
      */
     uint8_t Multicast;
+#endif
     /*!
      * Application port
      */
@@ -2236,12 +2244,14 @@ typedef union uMibParam
      * Related MIB type: \ref MIB_CHANNELS_TX_POWER
      */
     int8_t ChannelsTxPower;
+#if 0
     /*!
      * Multicast channels
      *
      * Related MIB type: \ref MIB_MULTICAST_CHANNEL
      */
     McChannelParams_t MulticastChannel;
+#endif
     /*!
      * System overall timing error in milliseconds.
      *
@@ -2522,6 +2532,7 @@ typedef enum eLoRaMacStatus
      *
      */
     LORAMAC_STATUS_NO_FREE_CHANNEL_FOUND,
+#if 0
      /*!
       * ToDo
       */
@@ -2530,6 +2541,7 @@ typedef enum eLoRaMacStatus
       * ToDo
       */
     LORAMAC_STATUS_BUSY_PING_SLOT_WINDOW_TIME,
+#endif
      /*!
       * ToDo
       */
@@ -2546,10 +2558,12 @@ typedef enum eLoRaMacStatus
      * An error in the MAC command module is occurred
      */
     LORAMAC_STATUS_MAC_COMMAD_ERROR,
+#if 0
     /*!
      * An error in the Class B module is occurred
      */
     LORAMAC_STATUS_CLASS_B_ERROR,
+#endif
     /*!
      * An error in the Confirm Queue module is occurred
      */
@@ -2784,7 +2798,6 @@ LoRaMacStatus_t LoRaMacMcChannelSetup( McChannelParams_t *channel );
  *          \ref LORAMAC_STATUS_MC_GROUP_UNDEFINED.
  */
 LoRaMacStatus_t LoRaMacMcChannelDelete( AddressIdentifier_t groupID );
-#endif
 
 /*!
  * \brief   LoRaMAC multicast channel get groupId from MC address.
@@ -2812,6 +2825,7 @@ uint8_t LoRaMacMcChannelGetGroupId( uint32_t mcAddress );
  *          \ref LORAMAC_STATUS_MC_GROUP_UNDEFINED.
  */
 LoRaMacStatus_t LoRaMacMcChannelSetupRxParams( AddressIdentifier_t groupID, McRxParams_t *rxParams, uint8_t *status );
+#endif
 
 /*!
  * \brief   LoRaMAC MIB-Get
