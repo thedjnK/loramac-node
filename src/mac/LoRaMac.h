@@ -845,10 +845,12 @@ typedef enum eMcps
      */
     MCPS_MULTICAST,
 #endif
+#if 0
     /*!
      * Proprietary frame
      */
     MCPS_PROPRIETARY,
+#endif
 }Mcps_t;
 
 /*!
@@ -916,6 +918,7 @@ typedef struct sMcpsReqConfirmed
     int8_t Datarate;
 }McpsReqConfirmed_t;
 
+#if 0
 /*!
  * LoRaMAC MCPS-Request for a proprietary frame
  */
@@ -934,6 +937,7 @@ typedef struct sMcpsReqProprietary
      */
     int8_t Datarate;
 }McpsReqProprietary_t;
+#endif
 
 /*!
  * LoRaMAC MCPS-Request structure
@@ -958,10 +962,12 @@ typedef struct sMcpsReq
          * MCPS-Request parameters for a confirmed frame
          */
         McpsReqConfirmed_t Confirmed;
+#if 0
         /*!
          * MCPS-Request parameters for a proprietary frame
          */
         McpsReqProprietary_t Proprietary;
+#endif
     }Req;
 
     /*!

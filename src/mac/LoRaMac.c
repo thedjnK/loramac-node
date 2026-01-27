@@ -1444,6 +1444,7 @@ static void ProcessRadioRxDone( void )
             MacCtx.MacFlags.Bits.McpsInd = 1;
 
             break;
+#if 0
         case FRAME_TYPE_PROPRIETARY:
             memcpy1( MacCtx.RxPayload, &payload[pktHeaderLen], size - pktHeaderLen );
 
@@ -1454,6 +1455,7 @@ static void ProcessRadioRxDone( void )
 
             MacCtx.MacFlags.Bits.McpsInd = 1;
             break;
+#endif
         default:
             MacCtx.McpsIndication.Status = LORAMAC_EVENT_INFO_STATUS_ERROR;
             PrepareRxDoneAbort( );
@@ -1761,8 +1763,12 @@ static void LoRaMacHandleMcpsRequest( void )
         bool stopRetransmission = false;
         bool waitForRetransmission = false;
 
-        if( ( MacCtx.McpsConfirm.McpsRequest == MCPS_UNCONFIRMED ) ||
-            ( MacCtx.McpsConfirm.McpsRequest == MCPS_PROPRIETARY ) )
+        if( ( MacCtx.McpsConfirm.McpsRequest == MCPS_UNCONFIRMED )
+#if 0
+ ||
+            ( MacCtx.McpsConfirm.McpsRequest == MCPS_PROPRIETARY )
+#endif
+ )
         {
             stopRetransmission = CheckRetransUnconfirmedUplink( );
         }
@@ -3529,6 +3535,7 @@ LoRaMacStatus_t PrepareFrame( LoRaMacHeader_t* macHdr, LoRaMacFrameCtrl_t* fCtrl
             }
 
             break;
+#if 0
         case FRAME_TYPE_PROPRIETARY:
             if( ( fBuffer != NULL ) && ( MacCtx.AppDataSize > 0 ) )
             {
@@ -3536,6 +3543,7 @@ LoRaMacStatus_t PrepareFrame( LoRaMacHeader_t* macHdr, LoRaMacFrameCtrl_t* fCtrl
                 MacCtx.PktBufferLen = LORAMAC_MHDR_FIELD_SIZE + MacCtx.AppDataSize;
             }
             break;
+#endif
         default:
             return LORAMAC_STATUS_SERVICE_UNKNOWN;
     }
@@ -5759,6 +5767,7 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t* mcpsRequest )
             datarate = request.Req.Confirmed.Datarate;
             break;
         }
+#if 0
         case MCPS_PROPRIETARY:
         {
             readyToSend = true;
@@ -5769,6 +5778,7 @@ LoRaMacStatus_t LoRaMacMcpsRequest( McpsReq_t* mcpsRequest )
             datarate = request.Req.Proprietary.Datarate;
             break;
         }
+#endif
         default:
             break;
     }
