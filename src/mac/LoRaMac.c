@@ -2466,6 +2466,7 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                 LoRaMacCommandsAddCmd( MOTE_MAC_DEV_STATUS_ANS, macCmdPayload, 2 );
                 break;
             }
+#if 0
             case SRV_MAC_NEW_CHANNEL_REQ:
             {
                 NewChannelReqParams_t newChannelReq;
@@ -2491,6 +2492,7 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                 }
                 break;
             }
+#endif
             case SRV_MAC_RX_TIMING_SETUP_REQ:
             {
                 uint8_t delay = payload[macIndex++] & 0x0F;
@@ -2504,6 +2506,7 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                 LoRaMacCommandsAddCmd( MOTE_MAC_RX_TIMING_SETUP_ANS, macCmdPayload, 0 );
                 break;
             }
+#if 0
             case SRV_MAC_TX_PARAM_SETUP_REQ:
             {
                 TxParamSetupReqParams_t txParamSetupReq;
@@ -2542,6 +2545,7 @@ static void ProcessMacCommands( uint8_t *payload, uint8_t macIndex, uint8_t comm
                 }
                 break;
             }
+#endif
             case SRV_MAC_REKEY_CONF:
             {
                 uint8_t serverMinorVersion = payload[macIndex++];
@@ -5260,6 +5264,7 @@ LoRaMacStatus_t LoRaMacMibSetRequestConfirm( MibRequestConfirm_t* mibSet )
     return status;
 }
 
+#if 0
 LoRaMacStatus_t LoRaMacChannelAdd( uint8_t id, ChannelParams_t params )
 {
     ChannelAddParams_t channelAdd;
@@ -5298,6 +5303,7 @@ LoRaMacStatus_t LoRaMacChannelRemove( uint8_t id )
     }
     return LORAMAC_STATUS_OK;
 }
+#endif
 
 #if 0
 LoRaMacStatus_t LoRaMacMcChannelSetup( McChannelParams_t *channel )
