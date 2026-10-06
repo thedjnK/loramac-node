@@ -173,17 +173,6 @@ SecureElementStatus_t SecureElementSetKey( KeyIdentifier_t keyID, uint8_t* key )
     {
         if( SeNvm->KeyList[i].KeyID == keyID )
         {
-            if( ( keyID == MC_KEY_0 ) || ( keyID == MC_KEY_1 ) || ( keyID == MC_KEY_2 ) || ( keyID == MC_KEY_3 ) )
-            {  // Decrypt the key if its a Mckey
-                SecureElementStatus_t retval           = SECURE_ELEMENT_ERROR;
-                uint8_t               decryptedKey[16] = { 0 };
-
-                retval = SecureElementAesEncrypt( key, 16, MC_KE_KEY, decryptedKey );
-
-                memcpy1( SeNvm->KeyList[i].KeyValue, decryptedKey, SE_KEY_SIZE );
-                return retval;
-            }
-            else
             {
                 memcpy1( SeNvm->KeyList[i].KeyValue, key, SE_KEY_SIZE );
                 return SECURE_ELEMENT_SUCCESS;
@@ -278,14 +267,6 @@ SecureElementStatus_t SecureElementDeriveAndStoreKey( uint8_t* input, KeyIdentif
     uint8_t               key[16] = { 0 };
 
     // In case of MC_KE_KEY, only McRootKey can be used as root key
-    if( targetKeyID == MC_KE_KEY )
-    {
-        if( rootKeyID != MC_ROOT_KEY )
-        {
-            return SECURE_ELEMENT_ERROR_INVALID_KEY_ID;
-        }
-    }
-
     // Derive key
     retval = SecureElementAesEncrypt( input, 16, rootKeyID, key );
     if( retval != SECURE_ELEMENT_SUCCESS )
@@ -322,10 +303,12 @@ SecureElementStatus_t SecureElementProcessJoinAccept( JoinReqIdentifier_t joinRe
     // Determine decryption key
     KeyIdentifier_t encKeyID = NWK_KEY;
 
+#if 0
     if( joinReqType != JOIN_REQ )
     {
         encKeyID = J_S_ENC_KEY;
     }
+#endif
 
     memcpy1( decJoinAccept, encJoinAccept, encJoinAcceptSize );
 
