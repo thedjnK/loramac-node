@@ -1144,7 +1144,6 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
         // Nothing to be done
     }
 #if 0
-#if( USE_LRWAN_1_1_X_CRYPTO == 1 )
     else
     {
         // If Join-accept is a reply to a rejoin, the RJcount(0 or 1) replaces DevNonce in the key derivation process.
@@ -1157,7 +1156,6 @@ LoRaMacCryptoStatus_t LoRaMacCryptoHandleJoinAccept( JoinReqIdentifier_t joinReq
             nonce = CryptoNvm->FCntList.RJcount1;
         }
     }
-#endif
 #endif
 
     if( SecureElementProcessJoinAccept( joinReqType, joinEUI, nonce, macMsg->Buffer,
@@ -1350,7 +1348,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSecureMessage( uint32_t fCntUp, uint8_t txDr,
     }
 
     // Compute mic
-//#if( USE_LRWAN_1_1_X_CRYPTO == 1 )
+#if( USE_LRWAN_1_1_X_CRYPTO == 1 )
     if( CryptoNvm->LrWanVersion.Fields.Minor == 1 )
     {
         uint32_t cmacS = 0;
@@ -1371,9 +1369,8 @@ LoRaMacCryptoStatus_t LoRaMacCryptoSecureMessage( uint32_t fCntUp, uint8_t txDr,
         // MIC = cmacS[0..1] | cmacF[0..1]
         macMsg->MIC = ( ( cmacF << 16 ) & 0xFFFF0000 ) | ( cmacS & 0x0000FFFF );
     }
-#if 0
-    else
-//#endif
+#endif
+#if defined(USE_LRWAN_1_0_X_CRYPTO)
     {
         // MIC = cmacF[0..3]
         // The IsAck parameter is every time false since the ConfFCnt field is not used in legacy mode.
@@ -1437,7 +1434,7 @@ LoRaMacCryptoStatus_t LoRaMacCryptoUnsecureMessage( AddressIdentifier_t addrID, 
 
     // Compute mic
     bool isAck = macMsg->FHDR.FCtrl.Bits.Ack;
-#if 0
+#if defined(USE_LRWAN_1_0_X_CRYPTO)
     if( CryptoNvm->LrWanVersion.Fields.Minor == 0 )
     {
         // In legacy mode the IsAck parameter is forced to be false since the ConfFCnt field is not used.
